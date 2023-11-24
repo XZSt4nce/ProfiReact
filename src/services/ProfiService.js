@@ -3,7 +3,7 @@ import abi from './abi.json';
 
 class ProfiService {
     web3 =  new Web3('http://localhost:8545');
-    contractAddress = "0x253652de6C7c6814601cB3b9C8f4D32fcd97A100";
+    contractAddress = "0xab921052B34F38fe6E53a7BA026B33cbbCed103e";
     contract = new this.web3.eth.Contract(abi, this.contractAddress);
 
     updatePhase = async (sender) => {

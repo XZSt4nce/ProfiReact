@@ -10,13 +10,13 @@ import {GetBalance} from "../components/GetBalance";
 import {Reward} from "../components/Reward";
 
 const MainPage = () => {
-    const {user} = useContext(Context);
+    const {user, lifeTime} = useContext(Context);
 
     return (
         <div className={"d-flex flex-wrap flex-grow-1 align-items-start justify-content-center gap-2 p-3"}>
             <Timers/>
             <Profile/>
-            <BuyToken/>
+            {lifeTime >= 300 &&<BuyToken/>}
             <TransferTokens/>
             {user.role === "1" && (
                 <>
