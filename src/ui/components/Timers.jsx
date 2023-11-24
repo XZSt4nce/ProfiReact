@@ -7,7 +7,7 @@ import {LoadingButton} from "../kit/LoadingButton";
 import {Context} from "../../core/Context";
 
 export const Timers = () => {
-    const {user, lifeTime, setLifeTime} = useContext(Context);
+    const {user, lifeTime, setLifeTime, updateBalance} = useContext(Context);
     const [loading, setLoading] = useState(false);
 
     const updateTime = async () => {
@@ -41,6 +41,12 @@ export const Timers = () => {
 
     useEffect(() => {
         if (lifeTime) {
+            if (lifeTime === 300 || lifeTime === 900) {
+                (async () => {
+                    await updateTime();
+                    await updateBalance();
+                })();
+            }
             const timeout = setTimeout(() => {
                 setLifeTime(lifeTime + 1);
             }, 1000);
