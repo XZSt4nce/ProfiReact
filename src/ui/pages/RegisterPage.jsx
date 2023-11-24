@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Form} from "react-bootstrap";
 import ProfiService from "../../services/ProfiService";
 import {useHistory} from "react-router-dom";
@@ -6,10 +6,12 @@ import {WhiteContainer} from "../components/HOCs/WhiteContainer";
 import {FormInput} from "../kit/FormInput";
 import {LoadingButton} from "../kit/LoadingButton";
 import {utils} from "web3";
+import {Context} from "../../core/Context";
 
 const RegisterPage = () => {
     const nav = useHistory();
     const [loading, setLoading] = useState(false);
+    const {catchPromiseError} = useContext(Context);
 
     const register = async (ev) => {
         ev.preventDefault();
@@ -26,13 +28,8 @@ const RegisterPage = () => {
         } else {
             await ProfiService.signUp(address, login, password)
                 .then(() => nav.push('/login'))
-                .catch((e) => {
-                    console.log(e);
-                    const reason = e.toString().split(': ')[3];
-                    alert(reason ?? "Потеряно соединение с контрактом!");
-                });
+                .catch(catchPromiseError);
         }
-
         setLoading(false);
     }
 

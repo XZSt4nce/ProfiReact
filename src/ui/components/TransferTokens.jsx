@@ -8,7 +8,7 @@ import ProfiService from "../../services/ProfiService";
 import Web3 from "web3";
 
 export const TransferTokens = () => {
-    const {user} = useContext(Context);
+    const {user, catchPromiseError} = useContext(Context);
     const [loading, setLoading] = useState(false);
 
     const transferTokens = async (ev) => {
@@ -21,11 +21,7 @@ export const TransferTokens = () => {
         if (Web3.utils.isAddress(to)) {
             if (window.confirm(`Перевести ${amount} ${tokenTypeString} токенов на адрес ${to}?`)) {
                 await ProfiService.transferToken(user.wallet, to, amount * 10**10, tokenType)
-                    .catch((e) => {
-                        console.log(e);
-                        const reason = e.toString().split(': ')[3];
-                        alert(reason ?? "Потеряно соединение с контрактом!");
-                    });
+                    .catch(catchPromiseError);
             }
         } else {
             alert("Введите верный адрес!");

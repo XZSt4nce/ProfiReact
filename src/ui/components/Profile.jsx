@@ -8,7 +8,7 @@ import ProfiService from "../../services/ProfiService";
 import {LoadingButton} from "../kit/LoadingButton";
 
 export const Profile = () => {
-    const {user, setUserData, balance, lifeTime} = useContext(Context);
+    const {user, setUserData, balance, lifeTime, catchPromiseError} = useContext(Context);
     const [loading, setLoading] = useState(false);
 
     const copyAddress = async () => {
@@ -22,11 +22,7 @@ export const Profile = () => {
                 ...user,
                 requestedWhitelist: true
             }))
-            .catch((e) => {
-                console.log(e);
-                const reason = e.toString().split(': ')[3];
-                alert(reason ?? "Потеряно соединение с контрактом!");
-            });
+            .catch(catchPromiseError);
         setLoading(false);
     }
 

@@ -29,6 +29,12 @@ export const ContextWrapper = ({children}) => {
     const [transactionLimit, setLimit] = useState(0);
     const [whitelist, setWhitelist] = useState([]);
 
+    const catchPromiseError = (e) => {
+        console.log(e);
+        const reason = e.toString().split(': ')[3];
+        alert(reason ?? "Потеряно соединение с контрактом!");
+    }
+
     const setUserData = (data) => {
         setUser(data);
     };
@@ -64,11 +70,23 @@ export const ContextWrapper = ({children}) => {
                 };
                 setBalance(balances);
             })
-            .catch((e) => {
-                console.log(e);
-                const reason = e.toString().split(': ')[3];
-                alert(reason ?? "Потеряно соединение с контрактом!");
-            });
+            .catch(catchPromiseError);
+    }
+
+    const updatePhase = async (currentPhase) => {
+        await ProfiService.getTime()
+            .then(async (time) => {
+                const newTime = +time;
+                setLifeTime(newTime);
+                if (newTime >= 600 * currentPhase + 300) {
+                    await ProfiService.updatePhase(user.wallet)
+                        .then(async () => {
+                            await updateBalance().catch(catchPromiseError);
+                        })
+                        .catch(catchPromiseError);
+                }
+            })
+            .catch(catchPromiseError);
     }
 
     const values = {
@@ -78,13 +96,15 @@ export const ContextWrapper = ({children}) => {
         tokenPrice,
         transactionLimit,
         whitelist,
+        catchPromiseError,
         setUserData,
         setLifeTime,
         setTokenPrice,
         setTransactionLimit,
         logout,
         updateBalance,
-        setWhitelistData
+        setWhitelistData,
+        updatePhase
     }
 
     return (

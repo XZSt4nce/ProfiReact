@@ -9,7 +9,7 @@ import {FormInput} from "../kit/FormInput";
 
 const LoginPage = () => {
     const nav = useHistory();
-    const {setUserData} = useContext(Context);
+    const {setUserData, catchPromiseError} = useContext(Context);
     const [loading, setLoading] = useState(false);
 
     const logIn = async (ev) => {
@@ -22,11 +22,7 @@ const LoginPage = () => {
                 setUserData(user);
                 nav.push('/');
             })
-            .catch((e) => {
-                console.log(e);
-                const reason = e.toString().split(': ')[3];
-                alert(reason ?? "Потеряно соединение с контрактом!");
-            });
+            .catch(catchPromiseError);
         setLoading(false);
     };
 

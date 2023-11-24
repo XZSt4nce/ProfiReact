@@ -6,7 +6,7 @@ import {Context} from "../../core/Context";
 import {LoadingButton} from "../kit/LoadingButton";
 
 export const Requests = () => {
-    const {user, whitelist, setWhitelistData} = useContext(Context);
+    const {user, whitelist, setWhitelistData, catchPromiseError} = useContext(Context);
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -21,11 +21,7 @@ export const Requests = () => {
                     request.wallet
                 ]);
             })
-            .catch((e) => {
-                console.log(e);
-                const reason = e.toString().split(': ')[3];
-                alert(reason ?? "Потеряно соединение с контрактом!");
-            });
+            .catch(catchPromiseError);
         setLoading(false);
     }
 
@@ -35,11 +31,7 @@ export const Requests = () => {
             .then(() => {
                 setRequests(requests.map((el) => el !== requests[requestIndex]));
             })
-            .catch((e) => {
-                console.log(e);
-                const reason = e.toString().split(': ')[3];
-                alert(reason ?? "Потеряно соединение с контрактом!");
-            });
+            .catch(catchPromiseError);
         setLoading(false);
     }
 
@@ -49,11 +41,7 @@ export const Requests = () => {
                 .then((requests) => {
                     setRequests(requests.filter((request) => !request.isConfirmed));
                 })
-                .catch((e) => {
-                    console.log(e);
-                    const reason = e.toString().split(': ')[3];
-                    alert(reason ?? "Потеряно соединение с контрактом!");
-                });
+                .catch(catchPromiseError);
         })();
     }, [user]);
 

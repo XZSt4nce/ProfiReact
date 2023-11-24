@@ -7,24 +7,27 @@ import {LoadingButton} from "../kit/LoadingButton";
 import {Context} from "../../core/Context";
 
 export const Timers = () => {
-    const {user, lifeTime, setLifeTime, updateBalance} = useContext(Context);
+    const {user, lifeTime, setLifeTime, updatePhase, catchPromiseError} = useContext(Context);
     const [loading, setLoading] = useState(false);
 
     const updateTime = async () => {
-        await ProfiService.getTime().then((time) => setLifeTime(+time));
+        await ProfiService.getTime().then(async (time) => {
+            if (lifeTime < 300 && +time >= 300) {
+                await updatePhase(0);
+            } else if (lifeTime < 600 && +time >= 600) {
+                await updatePhase(1);
+            }
+            setLifeTime(+time);
+        });
     }
 
     const addMinute = async () => {
         setLoading(true);
         await ProfiService.addMinute(user.wallet)
-            .then(() => {
-                setLifeTime(lifeTime + 60);
+            .then(async () => {
+                await updateTime();
             })
-            .catch((e) => {
-                console.log(e);
-                const reason = e.toString().split(': ')[3];
-                alert(reason ?? "Потеряно соединение с контрактом!");
-            });
+            .catch(catchPromiseError);
         setLoading(false);
     }
 
@@ -40,19 +43,16 @@ export const Timers = () => {
     }
 
     useEffect(() => {
-        if (lifeTime) {
-            if (lifeTime === 300 || lifeTime === 900) {
-                (async () => {
-                    await updateTime();
-                    await updateBalance();
-                })();
-            }
-            const timeout = setTimeout(() => {
-                setLifeTime(lifeTime + 1);
-            }, 1000);
-            return () => {
-                clearTimeout(timeout);
-            }
+        if (lifeTime === 300 || lifeTime === 900) {
+            (async () => {
+                await updatePhase(lifeTime === 300 ? 0 : 1);
+            })();
+        }
+        const timeout = setTimeout(() => {
+            setLifeTime(lifeTime + 1);
+        }, 1000);
+        return () => {
+            clearTimeout(timeout);
         }
     }, [lifeTime]);
 

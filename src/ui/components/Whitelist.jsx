@@ -5,17 +5,13 @@ import {Context} from "../../core/Context";
 import ProfiService from "../../services/ProfiService";
 
 export const Whitelist = () => {
-    const {user, whitelist, setWhitelistData} = useContext(Context);
+    const {user, whitelist, setWhitelistData, catchPromiseError} = useContext(Context);
 
     useEffect(() => {
         (async () => {
             await ProfiService.getWhitelist(user.wallet)
                 .then(setWhitelistData)
-                .catch((e) => {
-                    console.log(e);
-                    const reason = e.toString().split(': ')[3];
-                    alert(reason ?? "Потеряно соединение с контрактом!");
-                });
+                .catch(catchPromiseError);
         })();
     }, [user]);
 

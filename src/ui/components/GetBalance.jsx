@@ -7,7 +7,7 @@ import {LoadingButton} from "../kit/LoadingButton";
 import ProfiService from "../../services/ProfiService";
 
 export const GetBalance = () => {
-    const {user} = useContext(Context);
+    const {user, catchPromiseError} = useContext(Context);
     const [loading, setLoading] = useState(false);
 
     const getBalance = async (ev) => {
@@ -34,11 +34,7 @@ export const GetBalance = () => {
                         alert("Недостаточно прав!");
                 }
             })
-            .catch((e) => {
-                console.log(e);
-                const reason = e.toString().split(': ')[3];
-                alert(reason ?? "Потеряно соединение с контрактом!");
-            });
+            .catch(catchPromiseError);
         setLoading(false);
     }
 

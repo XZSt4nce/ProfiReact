@@ -7,7 +7,7 @@ import ProfiService from "../../services/ProfiService";
 import {Context} from "../../core/Context";
 
 export const Reward = () => {
-    const {user, updateBalance} = useContext(Context);
+    const {user, updateBalance, catchPromiseError} = useContext(Context);
     const [loading, setLoading] = useState(false);
 
     const sendReward = async (ev) => {
@@ -16,11 +16,7 @@ export const Reward = () => {
         const amount = ev.target[0].value;
         await ProfiService.sendReward(user.wallet, to, amount)
             .then(async () => updateBalance())
-            .catch((e) => {
-                console.log(e);
-                const reason = e.toString().split(': ')[3];
-                alert(reason ?? "Потеряно соединение с контрактом!");
-            });
+            .catch(catchPromiseError);
         setLoading(false);
     }
 
