@@ -18,6 +18,12 @@ code {
     monospace;
 }
 
+.text-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 input, select {
   color: white !important;
 }

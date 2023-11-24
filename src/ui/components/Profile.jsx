@@ -33,9 +33,9 @@ export const Profile = () => {
     return (
         <WhiteContainer>
             <h1 className={"text-center"}>Личный кабинет</h1>
-            <div className={'d-flex gap-2 align-items-center mb-1 overflow-hidden'} style={{whiteSpace: "nowrap", textOverflow: "ellipsis"}}>Адрес: {user.wallet} <Button onClick={copyAddress} variant={'outline-primary'}><BsCopy/></Button></div>
+            <div className={'d-flex gap-2 align-items-center mb-1 text-truncate'}>Адрес: {user.wallet} <Button onClick={copyAddress} variant={'outline-primary'}><BsCopy/></Button></div>
             <p>Логин: {user.login}</p>
-            <p>Роль: {user.role === 0 ? 'Владелец' : user.role === 1 ? 'Приватный провайдер' : user.role === 2 ? 'Публичный провайдер' : 'Пользователь'}</p>
+            <p>Роль: {user.role === "0" ? 'Владелец' : user.role === "1" ? 'Приватный провайдер' : user.role === "2" ? 'Публичный провайдер' : 'Пользователь'}</p>
             {user.isInWhitelist ? (
                     <p>Вы находитесь в вайтлисте</p>
                 ) : user.requestedWhitelist ? (

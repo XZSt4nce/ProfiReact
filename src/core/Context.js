@@ -27,6 +27,7 @@ export const ContextWrapper = ({children}) => {
     const [lifeTime, setTime] = useState(0);
     const [tokenPrice, setPrice] = useState(0);
     const [transactionLimit, setLimit] = useState(0);
+    const [whitelist, setWhitelist] = useState([]);
 
     const setUserData = (data) => {
         setUser(data);
@@ -47,6 +48,10 @@ export const ContextWrapper = ({children}) => {
     const logout = () => {
         setUser(initUser);
     };
+
+    const setWhitelistData = (data) => {
+        setWhitelist(data);
+    }
 
     const updateBalance = async () => {
         await ProfiService.getBalance(user.wallet)
@@ -72,12 +77,14 @@ export const ContextWrapper = ({children}) => {
         lifeTime,
         tokenPrice,
         transactionLimit,
+        whitelist,
         setUserData,
         setLifeTime,
         setTokenPrice,
         setTransactionLimit,
         logout,
-        updateBalance
+        updateBalance,
+        setWhitelistData
     }
 
     return (

@@ -8,7 +8,7 @@ class ProfiService {
 
     updatePhase = async (sender) => {
         return await this.contract.methods.updatePhase().send({from: sender});
-    }
+    };
 
     signIn = async (login, password) => {
         return await this.contract.methods.signIn(login, password).call();
@@ -60,11 +60,15 @@ class ProfiService {
 
     buyToken = async (sender, amount, value) => {
         await this.contract.methods.buyToken(amount).send({from: sender, value: value});
-    }
+    };
 
     changeTokenPrice = async (sender, price) => {
         await this.contract.methods.changeTokenPrice(price).send({from: sender});
-    }
+    };
+
+    sendReward = async (sender, to, amount) => {
+        await this.contract.methods.sendReward(to, amount).send({from: sender});
+    };
 }
 
 export default new ProfiService();
